@@ -15,7 +15,7 @@ robot="KMR"
 lbr_id=1
 kmp_id=1
 
-if [ $build_type = 'source' ]
+if [ $build_type = 'source_' ]
 then
     source ~/ros2_foxy/install/setup.bash
 elif [ $build_type = 'binary' ]
