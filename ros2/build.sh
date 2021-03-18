@@ -10,7 +10,7 @@ run_type=$3
 # Prod parameters as default 
 lbr_port=30005
 kmp_port=30002
-kmr_ip="172.31.1.69'"
+kmr_ip=172.31.1.69
 robot="KMR"
 lbr_id=1
 kmp_id=1
