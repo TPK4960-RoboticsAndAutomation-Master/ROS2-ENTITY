@@ -44,16 +44,16 @@ class CameraNode(Node):
         try:
             self.destroy_node()
             rclpy.shutdown()
-            print(cl_green("Successfully tore down lbr node"))
+            print(cl_green("Successfully tore down camera node"))
         except:
             print(cl_red('Error: ') + "rclpy shutdown failed")
 
 
 def main(args=None):
-    while True:
-        rclpy.init(args=args)
-        camera_node = CameraNode()
-        rclpy.spin(camera_node)
-
+    rclpy.init(args=args)
+    camera_node = CameraNode()
+    rclpy.spin(camera_node)
+    camera_node.tear_down()
+        
 if __name__ == '__main__':
     main()
