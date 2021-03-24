@@ -14,6 +14,7 @@ kmr_ip=172.31.1.69
 robot="KMR"
 lbr_id=1
 kmp_id=1
+camera_id=1
 
 if [ $build_type = 'source_' ]
 then
@@ -39,6 +40,7 @@ sed -i "/^\([[:space:]]*robot: \).*/s//\1\'$robot\'/" kmr_communication/kmr_comm
 
 sed -i 's/lbr_id/'$lbr_id'/' kmr_communication/kmr_communication/config/bringup.yaml
 sed -i 's/kmp_id/'$kmp_id'/' kmr_communication/kmr_communication/config/bringup.yaml
+sed -i 's/camera_id/'$camera_id'/' kmr_communication/kmr_communication/config/bringup.yaml
 
 sed -i 's/lbr_port/'$lbr_port'/' kmr_communication/kmr_communication/config/bringup.yaml
 sed -i 's/kmp_port/'$kmp_port'/' kmr_communication/kmr_communication/config/bringup.yaml

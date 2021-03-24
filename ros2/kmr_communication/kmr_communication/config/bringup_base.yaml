@@ -15,3 +15,7 @@ kmp_command_node:
     id: 'kmp_id' # Robot ID
     port: 'kmp_port'
     KMR/ip: 'kmp_ip'
+
+camera_node:
+  ros__parameters:
+    id: 'camera_id'
