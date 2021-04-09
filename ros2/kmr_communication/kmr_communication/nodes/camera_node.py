@@ -36,7 +36,7 @@ class CameraNode(Node):
     def callback(self):
         frame = self.camera.capture()
 
-        msg = self.bridge.cv2_to_imgmsg(frame, 'bgr8')
+        msg = self.bridge.cv2_to_imgmsg(frame)
 
         self.publish_image.publish(msg)
 
