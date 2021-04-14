@@ -25,7 +25,7 @@ class CameraNode(Node):
 
     def start_camera(self, data):
         print("Starting camera")
-        os.system("bash ../script/startcamera.sh " + "udp://" + self.ip)
+        os.system("bash kmr_communication/kmr_communication/script/startcamera.sh " + "udp://" + self.ip)
     
     def tear_down(self):
         try:
