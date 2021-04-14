@@ -19,3 +19,4 @@ kmp_command_node:
 camera_node:
   ros__parameters:
     id: 'camera_id'
+    udp/ip: 'camera_udp_ip'

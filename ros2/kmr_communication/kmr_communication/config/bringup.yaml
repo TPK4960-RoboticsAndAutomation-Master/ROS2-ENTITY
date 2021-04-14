@@ -19,3 +19,4 @@ kmp_command_node:
 camera_node:
   ros__parameters:
     id: '1'
+    udp/ip: '10.22.23.227:5000'

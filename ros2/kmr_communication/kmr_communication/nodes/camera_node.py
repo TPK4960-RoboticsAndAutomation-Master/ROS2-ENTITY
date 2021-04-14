@@ -6,10 +6,7 @@ import argparse
 from std_msgs.msg import String, Float64
 from rclpy.node import Node
 from rclpy.utilities import remove_ros_args
-from ..script.camera_opencv import Camera
-from sensor_msgs.msg import Image
-from cv_bridge import CvBridge
-
+import os
 
 def cl_red(msge): return '\033[31m' + msge + '\033[0m'
 def cl_green(msge): return '\033[32m' + msge + '\033[0m'
@@ -21,25 +18,15 @@ class CameraNode(Node):
         self.name = 'camera_node'
         self.declare_parameter('id')
         self.id = self.get_parameter('id').value
-        self.camera = Camera()
-        self.timer = self.create_timer(1/30, self.callback)
-        self.bridge = CvBridge()
-        
-        # Make a listener for relevant topics
-        """ nothing as of now """
+        self.declare_parameter('udp/ip')
+        self.ip = self.get_parameter('udp/ip').value
 
-        # Publishers
-        self.publish_image = self.create_publisher(Image, 'image', 10)
+        sub_start_camera = self.create_subscription(String, 'start_camera', self.start_camera, 10)
 
-        self.get_logger().info('Node is ready')
-
-    def callback(self):
-        frame = self.camera.capture()
-
-        msg = self.bridge.cv2_to_imgmsg(frame)
-
-        self.publish_image.publish(msg)
-
+    def start_camera(self, data):
+        print("Starting camera")
+        os.system("bash ../script/startcamera.sh " + "udp://" + self.ip)
+    
     def tear_down(self):
         try:
             self.destroy_node()

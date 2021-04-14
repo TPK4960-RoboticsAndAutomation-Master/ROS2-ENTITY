@@ -15,6 +15,7 @@ robot="KMR"
 lbr_id=1
 kmp_id=1
 camera_id=1
+udp_ip="udp://andrcar-master.ivt.ntnu.no:5000"
 
 if [ $build_type = 'source_' ]
 then
@@ -30,6 +31,7 @@ then
     lbr_port=50007
     kmp_port=50008
     kmr_ip=127.0.0.1
+    udp_ip="10.22.23.227:5000"
 elif [ $run_type = 'prod' ]
 then 
     echo "Running in production mode"
@@ -47,6 +49,8 @@ sed -i 's/kmp_port/'$kmp_port'/' kmr_communication/kmr_communication/config/brin
 
 sed -i 's/lbr_ip/'$kmr_ip'/' kmr_communication/kmr_communication/config/bringup.yaml
 sed -i 's/kmp_ip/'$kmr_ip'/' kmr_communication/kmr_communication/config/bringup.yaml
+
+sed -i 's/camera_udp_ip/'$udp_ip'/' kmr_communication/kmr_communication/config/bringup.yaml
 
 colcon build --symlink-install
 source install/setup.bash 
