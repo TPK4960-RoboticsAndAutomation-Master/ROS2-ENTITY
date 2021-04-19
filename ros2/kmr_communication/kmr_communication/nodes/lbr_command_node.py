@@ -91,7 +91,6 @@ def main(argv=sys.argv[1:]):
     while True:
         rclpy.init(args=argv)
         lbr_command_node = LbrCommandNode(args.connection,args.robot)
-
         rclpy.spin(lbr_command_node)
 
 

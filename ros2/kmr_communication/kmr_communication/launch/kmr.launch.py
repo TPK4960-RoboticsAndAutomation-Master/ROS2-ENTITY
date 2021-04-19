@@ -60,6 +60,7 @@ def generate_launch_description(argv=sys.argv[1:]):
             name='camera_node',
             output='screen',
             emulate_tty=True,
+            arguments=['-ro', robot],
             parameters=[param_dir]
         ),
     ])
