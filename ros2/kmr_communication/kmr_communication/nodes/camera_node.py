@@ -27,7 +27,7 @@ class CameraNode(Node):
         self.proc = None
 
         # Subscribers
-        sub_camera = self.create_subscription(String, 'handle_camera', self.handle_camera, 10)
+        sub_camera = self.create_subscription(String, 'handle_camera_' + str(self.id), self.handle_camera, 10)
         sub_status_check = self.create_subscription(String, 'status_check', self.publish_status, 10)
 
         # Publishers
@@ -51,7 +51,7 @@ class CameraNode(Node):
 
     def publish_status(self):
         msg = String()
-        msg.data = self.id + ":" + self.robot + ":camera:" + str(self.status) + ":" + str(self.ip)
+        msg.data = self.id + ":" + self.robot + ":camera:" + str(self.status) + ":" + str(self.ip) #ip = ip:port
         self.camera_status_publisher.publish(msg)
     
     def tear_down(self):
