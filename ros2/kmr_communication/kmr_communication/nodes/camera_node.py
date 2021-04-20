@@ -34,7 +34,7 @@ class CameraNode(Node):
         self.camera_status_publisher = self.create_publisher(String, 'camera_status', 10)
 
     def handle_camera(self, data):
-        if data.data.lower() == "start":
+        if data.data.lower() == "start" and self.status == 0:
             print(cl_green("Starting camera"))
             self.proc = subprocess.Popen(["/bin/bash", "kmr_communication/kmr_communication/script/startcamera.sh", self.ip])
             self.status = 1
