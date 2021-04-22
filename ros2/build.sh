@@ -15,7 +15,7 @@ robot="KMR"
 lbr_id=1
 kmp_id=1
 camera_id=1
-udp_ip="udp://andrcar-master.ivt.ntnu.no:5000"
+udp_ip="129.241.90.39:5000"
 
 if [ $build_type = 'source_' ]
 then
