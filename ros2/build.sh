@@ -31,7 +31,7 @@ then
     lbr_port=50007
     kmp_port=50008
     kmr_ip=127.0.0.1
-    udp_ip="10.22.23.227:5000"
+    udp_ip="10.22.22.52:5000"
 elif [ $run_type = 'prod' ]
 then 
     echo "Running in production mode"
