@@ -13,6 +13,7 @@ import subprocess
 if uname()[4] == "aarch64":
     import picamera
     import socket
+    import time
 
 def cl_red(msge): return '\033[31m' + msge + '\033[0m'
 def cl_green(msge): return '\033[32m' + msge + '\033[0m'
@@ -47,7 +48,15 @@ class CameraNode(Node):
             #self.proc = subprocess.Popen(["/bin/bash", "kmr_communication/kmr_communication/script/startcamera.sh", self.ip])
             if self.isRPI:
                 server, port = self.ip.split(":")
-                self.client_socket.connect((server, int(port)))
+               
+                while True:
+                    try:
+                        self.client_socket.connect((server, int(port)))
+                        break
+                    except socket.error:
+                        print("Connection Failed, Retrying..")
+                        time.sleep(1)
+               
                 self.connection = self.client_socket.makefile('wb')
                 with picamera.PiCamera() as camera:
                     camera.resolution = (640, 480)
