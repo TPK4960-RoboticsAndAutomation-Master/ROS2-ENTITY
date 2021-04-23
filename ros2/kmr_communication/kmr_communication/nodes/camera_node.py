@@ -48,20 +48,25 @@ class CameraNode(Node):
             #self.proc = subprocess.Popen(["/bin/bash", "kmr_communication/kmr_communication/script/startcamera.sh", self.ip])
             if self.isRPI:
                 server, port = self.ip.split(":")
-               
+                print("I AM RASPBERRY PI")
+                print(server, port)
+
                 while True:
                     try:
                         self.client_socket.connect((server, int(port)))
+                        print("IM IN THE LOOP")
                         break
                     except socket.error:
                         print("Connection Failed, Retrying..")
                         time.sleep(1)
-               
+
+                print("CONNECTED!!!!!!!!")
                 self.connection = self.client_socket.makefile('wb')
                 with picamera.PiCamera() as camera:
                     camera.resolution = (640, 480)
                     camera.framerate = 24
                     camera.start_recording(self.connection , format='h264')
+                    print("CAMERA STARTED!!!!!!!!")
             self.status = 1
         elif data.data.lower() == "stop":
             try:
