@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from os import error
+from os import error, uname
 import sys
 from typing import Callable
 import rclpy
@@ -9,6 +9,10 @@ from std_msgs.msg import String, Float64
 from rclpy.node import Node
 from rclpy.utilities import remove_ros_args
 import subprocess
+
+if uname()[4] == "aarch64":
+    import picamera
+    import socket
 
 def cl_red(msge): return '\033[31m' + msge + '\033[0m'
 def cl_green(msge): return '\033[32m' + msge + '\033[0m'
@@ -25,6 +29,10 @@ class CameraNode(Node):
         self.declare_parameter('udp/ip')
         self.ip = self.get_parameter('udp/ip').value
         self.proc = None
+        self.isRPI = uname()[4] == "aarch64"
+
+        if self.isRPI:
+            self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
         # Subscribers
         sub_camera = self.create_subscription(String, 'handle_camera_' + str(self.id), self.handle_camera, 10)
@@ -36,12 +44,25 @@ class CameraNode(Node):
     def handle_camera(self, data):
         if data.data.lower() == "start" and self.status == 0:
             print(cl_green("Starting camera"))
-            self.proc = subprocess.Popen(["/bin/bash", "kmr_communication/kmr_communication/script/startcamera.sh", self.ip])
+            #self.proc = subprocess.Popen(["/bin/bash", "kmr_communication/kmr_communication/script/startcamera.sh", self.ip])
+            if self.isRPI:
+                server, port = self.ip.split(":")
+                self.client_socket.connect((server, int(port)))
+                self.connection = self.client_socket.makefile('wb')
+                with picamera.PiCamera() as camera:
+                    camera.resolution = (640, 480)
+                    camera.framerate = 24
+                    camera.start_recording(self.connection , format='h264')
             self.status = 1
         elif data.data.lower() == "stop":
             try:
                 self.status = 0
-                self.proc.terminate()
+                #self.proc.terminate()
+                if self.isRPI:
+                    with picamera.PiCamera() as camera:
+                        camera.stop_recording()
+                        self.connection.close()
+                        self.client_socket.close()
                 print(cl_green("Stopping camera"))  
             except AttributeError:
                 print(cl_red("Camera was never started, therefore never stopped")) 
