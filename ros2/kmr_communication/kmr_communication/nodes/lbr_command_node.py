@@ -18,6 +18,7 @@ class LbrCommandNode(Node):
         super().__init__('lbr_command_node')
         self.name = 'lbr_command_node'
         self.robot = robot
+        self.status = 0
         self.declare_parameter('port')
         self.declare_parameter('id')
         self.id = self.get_parameter('id').value
@@ -36,8 +37,9 @@ class LbrCommandNode(Node):
             self.soc=None
         
         # Make a listener for relevant topics
-        sub_manipulator_vel = self.create_subscription(String, 'manipulator_vel', self.manipulator_vel_callback, 10)
-        sub_shutdown = self.create_subscription(String, 'lbr_shutdown', self.shutdown_callback, 10)
+        sub_manipulator_vel = self.create_subscription(String, 'manipulator_vel_' + str(self.id), self.manipulator_vel_callback, 10)
+        sub_shutdown = self.create_subscription(String, 'lbr_shutdown_' + str(self.id), self.shutdown_callback, 10)
+        sub_status_check = self.create_subscription(String, 'status_check', self.status_callback, 10)
 
         # Publishers
         self.lbr_status_publisher = self.create_publisher(String, 'lbr_status', 10)
@@ -55,6 +57,10 @@ class LbrCommandNode(Node):
         msg = 'setLBRmotion ' + data.data
         self.soc.send(msg)
 
+    def status_callback(self, data):
+        print(data.data)
+        self.publish_status(self.status)
+
     def publish_status(self, status):
         """
             'status' is either 0 (offline) or 1 (online).
@@ -62,6 +68,10 @@ class LbrCommandNode(Node):
         msg = String()
         msg.data = self.id + ":" + self.robot + ":lbr:" + str(status)
         self.lbr_status_publisher.publish(msg)
+        self.set_status(status)
+
+    def set_status(self, status):
+        self.status = status
 
     def tear_down(self):
         try:
@@ -81,7 +91,6 @@ def main(argv=sys.argv[1:]):
     while True:
         rclpy.init(args=argv)
         lbr_command_node = LbrCommandNode(args.connection,args.robot)
-
         rclpy.spin(lbr_command_node)
 
 

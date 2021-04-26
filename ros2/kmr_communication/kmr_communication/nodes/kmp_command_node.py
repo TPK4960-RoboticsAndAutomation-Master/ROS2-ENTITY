@@ -18,6 +18,7 @@ class KmpCommandNode(Node):
         super().__init__('kmp_command_node')
         self.name = 'kmp_command_node'
         self.robot = robot
+        self.status = 0
         self.declare_parameter('port')
         self.declare_parameter('id')
         self.id = self.get_parameter('id').value
@@ -36,9 +37,10 @@ class KmpCommandNode(Node):
             self.soc=None
 
         # Make a listener for relevant topics
-        sub_twist = self.create_subscription(Twist, 'cmd_vel', self.twist_callback, 10)
-        sub_pose = self.create_subscription(Pose, 'pose', self.pose_callback, 10)
-        sub_shutdown = self.create_subscription(String, 'kmp_shutdown', self.shutdown_callback, 10)
+        sub_twist = self.create_subscription(Twist, 'cmd_vel_' + str(self.id), self.twist_callback, 10)
+        sub_pose = self.create_subscription(Pose, 'pose_' + str(self.id), self.pose_callback, 10)
+        sub_shutdown = self.create_subscription(String, 'kmp_shutdown_' + str(self.id), self.shutdown_callback, 10)
+        sub_status_check = self.create_subscription(String, 'status_check', self.status_callback, 10)
 
         # Publishers
         self.kmp_status_publisher = self.create_publisher(String, 'kmp_status', 10)
@@ -61,6 +63,10 @@ class KmpCommandNode(Node):
         msg = 'setPose ' + str(data.position.x) + " " + str(data.position.y) + " " + str(data.orientation.z)
         self.soc.send(msg)
 
+    def status_callback(self, data):
+        print(data.data)
+        self.publish_status(self.status)
+
     def publish_status(self, status):
         """
             'status' is either 0 (offline) or 1 (online).
@@ -68,6 +74,10 @@ class KmpCommandNode(Node):
         msg = String()
         msg.data = self.id + ":" + self.robot + ":kmp:" + str(status)
         self.kmp_status_publisher.publish(msg)
+        self.set_status(status)
+
+    def set_status(self, status):
+        self.status = status
 
     def tear_down(self):
         try:

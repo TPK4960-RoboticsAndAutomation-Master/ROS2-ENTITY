@@ -15,3 +15,8 @@ kmp_command_node:
     id: '1' # Robot ID
     port: '50008'
     KMR/ip: '127.0.0.1'
+
+camera_node:
+  ros__parameters:
+    id: '1'
+    udp/ip: '10.22.23.227:5000'

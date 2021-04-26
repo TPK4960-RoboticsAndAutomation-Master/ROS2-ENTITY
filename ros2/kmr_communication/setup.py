@@ -29,6 +29,7 @@ setup(
         'console_scripts': [
             'lbr = kmr_communication.nodes.lbr_command_node:main',
             'kmp = kmr_communication.nodes.kmp_command_node:main',
+            'camera = kmr_communication.nodes.camera_node:main',
         ],
     },
 )
