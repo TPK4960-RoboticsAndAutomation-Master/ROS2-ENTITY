@@ -10,19 +10,19 @@ Project folders:
 * [ros2](ros2): contains the ROS 2 program. For production purposes, this is the only relevant folder of the three project folders. 
 
 Bash scripts:
-* [ros2/auto.sh](ros2.auto.sh): the main bash script that starts everything.
-* [ros2/build.sh](ros2.build.sh): bash script for configuring, building and running the ROS 2 program.
+* [ros2/auto.sh](ros2/auto.sh): the main bash script that starts everything.
+* [ros2/build.sh](ros2/build.sh): bash script for configuring, building and running the ROS 2 program.
 
 ROS 2 Package:
-* [ros2/kmr_communication/kmr_communication](ros2.kmr_communication.kmr_communication): entity-related code. This currently only consists of code related to the KMR iiwa, but can be expanded for other robots. It should really be named "entity_communication".
-* [ros2/kmr_communication/package.xml](ros2.kmr_communication.package.xml): dependencies for the ROS 2 package.
-* [ros2/kmr_communication/setup.py](ros2.kmr_communication.setup.py): this is where one speciefies which files should be included when the package is built and prepared for execution. 
+* [ros2/kmr_communication/kmr_communication](ros2/kmr_communication/kmr_communication): entity-related code. This currently only consists of code related to the KMR iiwa, but can be expanded for other robots. It should really be named "entity_communication".
+* [ros2/kmr_communication/package.xml](ros2/kmr_communication/package.xml): dependencies for the ROS 2 package.
+* [ros2/kmr_communication/setup.py](ros2/kmr_communication/setup.py): this is where one speciefies which files should be included when the package is built and prepared for execution. 
 
 Entity-related code:
-* [ros2/kmr_communication/kmr_communication/config](ros2.kmr_communication.kmr_communication.config): yaml-files with parameters for each robot and its components.
-* [ros2/kmr_communication/kmr_communication/launch](ros2.kmr_communication.kmr_communication.launch): launch script that simultaneously executes all ROS nodes relating to entity communication.
-* [ros2/kmr_communication/kmr_communication/nodes](ros2.kmr_communication.kmr_communication.nodes): all ROS nodes relating to entity communication.
-* [ros2/kmr_communication/kmr_communication/scripts](ros2.kmr_communication.kmr_communication.script): additional scripts without ROS 2-specific code.
+* [ros2/kmr_communication/kmr_communication/config](ros2/kmr_communication/kmr_communication/config): yaml-files with parameters for each robot and its components.
+* [ros2/kmr_communication/kmr_communication/launch](ros2/kmr_communication/kmr_communication/launch): launch script that simultaneously executes all ROS nodes relating to entity communication.
+* [ros2/kmr_communication/kmr_communication/nodes](ros2/kmr_communication/kmr_communication/nodes): all ROS nodes relating to entity communication.
+* [ros2/kmr_communication/kmr_communication/scripts](ros2/kmr_communication/kmr_communication/script): additional scripts without ROS 2-specific code.
 
 
 ## Setup
@@ -36,21 +36,66 @@ The steps outlined here are inspired by [this guide](https://medium.com/swlh/ras
 
 1. First, follow the steps from the [guide](https://docs.ros.org/en/foxy/Installation/Ubuntu-Development-Setup.html) on the official ROS 2 website until the step **Install dependencies using rosdep**.
 2. Try doing the step, and if an error occurs regarding *libgl-dev*, do this:
-  1. Type `ls /var/cache/apt/archives/*libgl*` 
-  2. Copy the package name 
-  3. Type `sudo dpkg –i ––force–overwrite /var/cache/apt/archives/full_name_of_package_from_copy`
+    1. Type `ls /var/cache/apt/archives/*libgl*` 
+    2. Copy the package name 
+    3. Type `sudo dpkg –i ––force–overwrite /var/cache/apt/archives/full_name_of_package_from_copy`
 3. Do the following to ignore some unnecessary features:
-  4. `cd ~/ros2_foxy/`
-  5. `touch src/ros2/rviz/AMENT_IGNORE` 
-  6. `touch src/ros-visualization/AMENT_IGNORE`
-  7. `touch src/ros2/system_tests/AMENT_IGNORE`
-4. Set some additional build flags to make all builds succeed. These needs to be saved as Colcon defaults so that they are used automatically.
+    1. `cd ~/ros2_foxy/`
+    2. `touch src/ros2/rviz/AMENT_IGNORE` 
+    3. `touch src/ros-visualization/AMENT_IGNORE`
+    4. `touch src/ros2/system_tests/AMENT_IGNORE`
+4. Set some additional build flags to make all builds succeed. These needs to be saved as Colcon defaults so that they are used automatically:
+    1. `mkdir ~/.colcon && cd. ~/.colcon`
+    2. `touch defaults.yaml`
+    3. `sudo nano defaults.yaml`
+    4. Insert the following:
+      ```
+      build: 
+      cmake-args: 
+      - -DCMAKE_SHARED_LINKER_FLAGS='-latomic -lpython3.7m' 
+      - -DCMAKE_EXE_LINKER_FLAGS='-latomic -lpython3.7m' 
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      ```
+5. Continue the ROS 2 guide from the step **build the code in workspace**.
 
 #### ROS 2 on linux distributions that support ROS 2 binaries
-
+This is more straightforward. We recommend installing ROS 2 via [Debian Packages](https://docs.ros.org/en/crystal/Installation/Linux-Install-Debians.html).
 
 ## Usage
+`cd ros2`
 
-To run the project, ...
+### With auto.sh
+The auto.sh script is meant to be run on start-up. It includes a *git pull*, and you should therefore clone the repo using ssh to avoid failure. It is also meant for production purposes, and it will therefore only be of use if it is run on a Raspberry Pi connected to a KUKA KMR iiwa robot via an Ethernet connection. 
+
+If you are certain that everything is set up correctly, do the following: 
+1. `chmod a+x build.sh`
+2. `chmod a+x auto.sh`
+3. `bash auto.sh`
+
+### With build.sh
+1. `chmod a+x build.sh`
+2. `bash build.sh <build> <connection> <mode>`
+
+With ROS 2 binary build, TCP connection and dummy clients (local testing):
+
+`bash build.sh binary TCP test`
+
+With ROS 2 source build, UDP connection and "real" clients (connected to robot in lab):
+
+`bash build.sh source_ UDP prod`
+
+### Manual usage
+For this, make sure that the [config file](ros2/kmr_communication/kmr_communication/config/bringup.yaml) has the correct parameters for whatever it is you want to do (i.e. IPs and ports need to match either the robot's or the dummy clients').
+
+While in the `ros2` folder, do the following:
+1. `colcon build --symlink-install`
+2. `source install/setup.bash`
+3. `ros2 launch kmr_communication kmr.launch.py`
 
 ### Connecting dummy clients
+While the ROS 2 program is running:
+1. `cd python_test_clients`
+2. `python3 <component>_client.py`
+
+
+
