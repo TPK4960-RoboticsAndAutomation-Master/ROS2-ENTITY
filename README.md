@@ -7,7 +7,7 @@ This code is related to the robot entities that are operated and monitored using
 Project folders:
 * [java](java): the java code that represents the KMR iiwa software. The code in this folder is not executed in the ROS2-ENTITY environment, but it is included in the repository as a means to show which parts of the KMR iiwa are relevant for the project.
 * [python_test_clients](python_test_clients): dummy clients used for testing that respresent two of the components on the KMR iiwa, namely the LBR iiwa robot arm and the KMP omniMove. 
-* [ros2](ros2): contains the ROS 2 program. For production purposes, this is the only relevant folder of the three project folders. 
+* [ros2](ros2): ROS 2 workspace. For production purposes, this is the only relevant folder of the three project folders. 
 
 Bash scripts:
 * [ros2/auto.sh](ros2/auto.sh): the main bash script that starts everything.
