@@ -1,7 +1,7 @@
 # ROS2-ENTITY
 This repository is part of the Master's project conducted by Andreas Chanon Arnholm and Mathias Neslow Henriksen during the spring of 2021.
 
-This project consists of the code that is related to the robot entities that are operated and monitored using the Asset Administration Shell (AAS). The main aspect of this repository is a ROS 2 program that starts a connection with the robot entity components through a TCP or UDP connection. With this connection, the program both receives status updates from the robot and sends this to the AAS and sends commands received from an AAS to be executed on the robot. The software has been tested with a Raspberry Pi 4 mounted atop a KUKA KMR iiwa robot. 
+This code is related to the robot entities that are operated and monitored using the Asset Administration Shell (AAS). The main aspect of this repository is a ROS 2 program that starts a connection with the robot entity components through a TCP or UDP connection. With this connection, the program both receives status updates from the robot and sends them to the AAS and forwards commands received from an AAS to be executed on the robot. The software has been tested with a Raspberry Pi 4 mounted on top of a KUKA KMR iiwa robot. 
 
 ## Structure
 Project folders:
