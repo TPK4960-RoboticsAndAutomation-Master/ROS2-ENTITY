@@ -48,7 +48,6 @@ class Socket:
         self.isconnected = False
 
     def shutdown(self):
-        print("SHUTTING DOWN")
         self.node.publish_status(0)
         time.sleep(0.5)
         self.conn.close()
