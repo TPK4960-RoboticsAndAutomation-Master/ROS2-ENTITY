@@ -41,7 +41,7 @@ class CameraNode(Node):
         elif data.data.lower() == "stop":
             try:
                 self.status = 0
-                os.kill(self.proc.pid, 9)
+                #os.kill(self.proc.pid, 9)
                 self.proc = None
                 print(cl_green("Stopping camera"))  
             except AttributeError:
