@@ -41,8 +41,9 @@ class CameraNode(Node):
         elif data.data.lower() == "stop":
             try:
                 self.status = 0
-                self.proc.terminate()
-                kill(self.proc.pid, 9)
+                self.proc.kill()
+                #kill(self.proc.pid, 9)
+                self.proc = None
                 print(cl_green("Stopping camera"))  
             except AttributeError:
                 print(cl_red("Camera was never started, therefore never stopped")) 
