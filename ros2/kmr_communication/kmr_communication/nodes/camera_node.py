@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from os import error
+from os import error, kill
 import sys
 from typing import Callable
 import rclpy
@@ -42,6 +42,7 @@ class CameraNode(Node):
             try:
                 self.status = 0
                 self.proc.terminate()
+                kill(self.proc.pid, 9)
                 print(cl_green("Stopping camera"))  
             except AttributeError:
                 print(cl_red("Camera was never started, therefore never stopped")) 
