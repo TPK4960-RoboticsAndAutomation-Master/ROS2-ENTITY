@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from os import error, kill
+import os
 import sys
 from typing import Callable
 import rclpy
@@ -41,8 +41,7 @@ class CameraNode(Node):
         elif data.data.lower() == "stop":
             try:
                 self.status = 0
-                self.proc.kill()
-                #kill(self.proc.pid, 9)
+                os.kill(self.proc.pid, 9)
                 self.proc = None
                 print(cl_green("Stopping camera"))  
             except AttributeError:
