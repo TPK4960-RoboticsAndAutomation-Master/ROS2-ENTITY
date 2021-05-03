@@ -52,7 +52,7 @@ class KmpCommandNode(Node):
 
 
     def shutdown_callback(self, data):
-        self.soc.send("")
+        self.soc.send("shutdown")
         self.soc.close()
 
     def twist_callback(self, data):

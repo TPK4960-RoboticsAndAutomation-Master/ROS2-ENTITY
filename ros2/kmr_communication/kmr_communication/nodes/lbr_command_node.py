@@ -50,7 +50,7 @@ class LbrCommandNode(Node):
         self.get_logger().info('Node is ready')
 
     def shutdown_callback(self, data):
-        self.soc.send("")
+        self.soc.send("shutdown")
         self.soc.close()
 
     def manipulator_vel_callback(self, data):
