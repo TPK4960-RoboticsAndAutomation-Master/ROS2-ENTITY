@@ -26,13 +26,16 @@ class CameraNode(Node):
 
         # Subscribers
         sub_camera = self.create_subscription(String, 'handle_camera_' + str(self.id), self.handle_camera, 10)
-        sub_status_check = self.create_subscription(String, 'status_check', self.publish_status, 10)
+        sub_status_check = self.create_subscription(String, 'status_check', self.status_callback, 10)
 
         # Publishers
         self.camera_status_publisher = self.create_publisher(String, 'camera_status', 10)
 
         self.publish_status()
 
+    def status_callback(self, data):
+        self.publish_status()
+    
     def handle_camera(self, data):
         if data.data.lower() == "start" and self.status == 0:
             print(cl_green("Starting camera"))
