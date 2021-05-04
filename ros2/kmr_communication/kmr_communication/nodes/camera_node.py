@@ -31,6 +31,8 @@ class CameraNode(Node):
         # Publishers
         self.camera_status_publisher = self.create_publisher(String, 'camera_status', 10)
 
+        self.publish_status()
+
     def handle_camera(self, data):
         if data.data.lower() == "start" and self.status == 0:
             print(cl_green("Starting camera"))
